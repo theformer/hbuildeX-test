@@ -1,0 +1,7 @@
+{
+  "navigationBarTitleText": "学习进度",
+  "navigationStyle": "custom",
+  "usingComponents": {
+    "u-line-progress": "/node-modules/uview-ui/components/u-line-progress/u-line-progress"
+  }
+}

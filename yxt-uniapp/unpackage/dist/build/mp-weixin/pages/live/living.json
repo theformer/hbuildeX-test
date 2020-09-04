@@ -1,0 +1,8 @@
+{
+  "navigationBarTitleText": "直播",
+  "backgroundTextStyle": "light",
+  "enablePullDownRefresh": true,
+  "onReachBottomDistance": 50,
+  "navigationStyle": "custom",
+  "usingComponents": {}
+}

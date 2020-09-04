@@ -1,0 +1,6 @@
+{
+  "navigationBarTitleText": "得分",
+  "usingComponents": {
+    "u-circle-progress": "/node-modules/uview-ui/components/u-circle-progress/u-circle-progress"
+  }
+}

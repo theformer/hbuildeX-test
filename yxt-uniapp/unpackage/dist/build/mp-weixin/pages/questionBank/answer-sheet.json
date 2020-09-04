@@ -1,0 +1,7 @@
+{
+  "navigationBarTitleText": "答题卡",
+  "usingComponents": {
+    "u-popup": "/node-modules/uview-ui/components/u-popup/u-popup",
+    "u-modal": "/node-modules/uview-ui/components/u-modal/u-modal"
+  }
+}

@@ -1,0 +1,7 @@
+{
+  "navigationBarTitleText": "已添加题库",
+  "navigationStyle": "custom",
+  "usingComponents": {
+    "h-m-drag-sorts": "/components/HM-dragSorts/HM-dragSorts"
+  }
+}

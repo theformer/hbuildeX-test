@@ -1,0 +1,72 @@
+{
+  "pages": [
+    "pages/index/index",
+    "pages/live/living",
+    "pages/live/live-review",
+    "pages/live/recorded-videos",
+    "pages/course/course",
+    "pages/course/switch-certificate",
+    "pages/questionBank/questionBank",
+    "pages/questionBank/answer-sheet",
+    "pages/questionBank/simulation-exercise",
+    "pages/questionBank/exam-papers",
+    "pages/questionBank/daily-practice",
+    "pages/questionBank/chapterPractice",
+    "pages/questionBank/comprehensive-test",
+    "pages/questionBank/individual-practice",
+    "pages/questionBank/sum-question",
+    "pages/questionBank/wrongTopic",
+    "pages/questionBank/user-feedback",
+    "pages/questionBank/handPaper",
+    "pages/my/my",
+    "pages/my/learning-progress",
+    "pages/my/schedule-details",
+    "pages/my/personal-data",
+    "pages/my/change-password",
+    "pages/my/score-inquiry",
+    "pages/my/my-course"
+  ],
+  "subPackages": [],
+  "window": {
+    "navigationBarBackgroundColor": "#fff",
+    "navigationBarTextStyle": "black",
+    "navigationBarTitleText": "uni-app",
+    "backgroundColor": "#FFFFFF",
+    "backgroundTextStyle": "dark",
+    "enablePullDownRefresh": true
+  },
+  "tabBar": {
+    "color": "#E5E9EF",
+    "selectedColor": "#1D2089",
+    "borderStyle": "white",
+    "list": [
+      {
+        "pagePath": "pages/live/living",
+        "text": "直播",
+        "iconPath": "./static/tabbar/直播管理 拷贝 2.png",
+        "selectedIconPath": "./static/tabbar/直播管理 拷贝.png"
+      },
+      {
+        "pagePath": "pages/course/course",
+        "text": "课程",
+        "iconPath": "./static/tabbar/课程.png",
+        "selectedIconPath": "./static/tabbar/课程 拷贝.png"
+      },
+      {
+        "pagePath": "pages/questionBank/questionBank",
+        "text": "题库",
+        "iconPath": "./static/tabbar/做题.png",
+        "selectedIconPath": "./static/tabbar/做题 拷贝.png"
+      },
+      {
+        "pagePath": "pages/my/my",
+        "text": "我的",
+        "iconPath": "./static/tabbar/我的.png",
+        "selectedIconPath": "./static/tabbar/我的 拷贝.png"
+      }
+    ]
+  },
+  "permission": {},
+  "usingComponents": {},
+  "sitemapLocation": "sitemap.json"
+}

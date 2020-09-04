@@ -1,0 +1,147 @@
+@charset "UTF-8";
+/* uni.scss */
+/**
+ * 这里是uni-app内置的常用样式变量
+ *
+ * uni-app 官方扩展插件及插件市场（https://ext.dcloud.net.cn）上很多三方插件均使用了这些样式变量
+ * 如果你是插件开发者，建议你使用scss预处理，并在插件代码中直接使用这些变量（无需 import 这个文件），方便用户通过搭积木的方式开发整体风格一致的App
+ *
+ */
+/**
+ * 如果你是App开发者（插件使用者），你可以通过修改这些变量来定制自己的插件主题，实现自定义主题功能
+ *
+ * 如果你的项目同样使用了scss预处理，你也可以直接在你的 scss 代码中使用如下变量，同时无需 import 这个文件
+ */
+/* 颜色变量 */
+/* 行为相关颜色 */
+/* 文字基本颜色 */
+/* 背景颜色 */
+/* 边框颜色 */
+/* 尺寸变量 */
+/* 文字尺寸 */
+/* 图片尺寸 */
+/* Border Radius */
+/* 水平间距 */
+/* 垂直间距 */
+/* 透明度 */
+/* 文章场景相关 */
+.score.data-v-5575a389 {
+  font-size: 35rpx;
+  font-family: Microsoft YaHei;
+  font-weight: bold;
+  color: #222222;
+  margin-top: 20rpx;
+}
+.grade.data-v-5575a389 {
+  font-size: 72rpx;
+  font-family: Microsoft YaHei;
+  font-weight: bold;
+  color: #222222;
+}
+.footer.data-v-5575a389 {
+  margin: 30rpx;
+}
+.footer .footer-head .footer-head-png.data-v-5575a389 {
+  width: 30rpx;
+  height: 38rpx;
+  margin-right: 30rpx;
+}
+.footer .footer-head .footer-tip.data-v-5575a389 {
+  font-size: 30rpx;
+  font-family: Microsoft YaHei;
+  font-weight: 400;
+  color: #0a0a0a;
+}
+.footer .footer-container.data-v-5575a389 {
+  margin-top: 40rpx;
+}
+.footer .footer-container .footer-container-text.data-v-5575a389 {
+  font-size: 24rpx;
+  font-family: Microsoft YaHei;
+  font-weight: 400;
+  color: #5a5a5a;
+}
+.gray.data-v-5575a389 {
+  height: 27rpx;
+  background: #f0f0f0;
+  margin: 40rpx 0;
+}
+.handPaper-container.data-v-5575a389 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: flex;
+  -webkit-box-orient: horizontal;
+  -webkit-box-direction: normal;
+  -webkit-flex-direction: row;
+          flex-direction: row;
+  -webkit-justify-content: space-around;
+          justify-content: space-around;
+  border-top: 2rpx #ededed solid;
+  border-bottom: 2rpx #ededed solid;
+  margin: 0 30rpx;
+  padding: 20rpx;
+}
+.handPaper-container .allPaper.data-v-5575a389 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: flex;
+  -webkit-box-orient: horizontal;
+  -webkit-box-direction: normal;
+  -webkit-flex-direction: row;
+          flex-direction: row;
+}
+.handPaper-container .allPaper .tip-png.data-v-5575a389 {
+  width: 36rpx;
+  height: 38rpx;
+  margin-right: 10rpx;
+  margin-top: 20rpx;
+}
+.handPaper-container .tip-right .tip-right-text.data-v-5575a389 {
+  font-size: 16rpx;
+  font-family: Microsoft YaHei;
+  font-weight: 400;
+  color: #aeaeae;
+}
+.handPaper-container .tip-right .tip-right-total.data-v-5575a389 {
+  display: block;
+  font-size: 20rpx;
+  font-family: Microsoft YaHei;
+  font-weight: 400;
+  color: #0a0a0a;
+}
+.handPaper-container .line.data-v-5575a389 {
+  width: 2rpx;
+  height: 50rpx;
+  background: #ededed;
+  margin: auto 0;
+}
+.handPaper-header.data-v-5575a389 {
+  margin: 65rpx auto;
+  text-align: center;
+}
+.handPaper-header .circleClass.data-v-5575a389 {
+  width: 272rpx;
+  height: 272rpx;
+}
+.handPaper-header .circleClass .u-progress-content.data-v-5575a389 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: flex;
+  -webkit-box-align: center;
+  -webkit-align-items: center;
+          align-items: center;
+  -webkit-box-pack: center;
+  -webkit-justify-content: center;
+          justify-content: center;
+}
+.handPaper-header .handPaper-header-foot.data-v-5575a389 {
+  height: 61rpx;
+  color: #FFFFFF;
+  margin: 56rpx auto;
+}
+.handPaper-header .handPaper-header-foot .lookAnswer.data-v-5575a389 {
+  background-color: #1d2088;
+  color: #fff;
+  border-radius: 0;
+}
+
