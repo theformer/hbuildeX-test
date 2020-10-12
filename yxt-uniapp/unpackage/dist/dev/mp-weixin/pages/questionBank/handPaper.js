@@ -101,6 +101,18 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
+  var g0 = (
+    (_vm.handPaper.correctQuestionCount / _vm.handPaper.allQuestionCount) *
+    100
+  ).toFixed(2)
+  _vm.$mp.data = Object.assign(
+    {},
+    {
+      $root: {
+        g0: g0
+      }
+    }
+  )
 }
 var recyclableRender = false
 var staticRenderFns = []
@@ -202,7 +214,8 @@ var _default =
       tip: '专家建议',
       handPaper: {},
       subCourseId: '',
-      list: [] };
+      list: [],
+      paperId: '' };
 
 
   },
@@ -259,16 +272,10 @@ var _default =
               if (_this.list[i].analyzeWord != '' && _this.list[i].analyzeWord != undefined) {
                 _this.list[i].analyzeWord = _this.list[i].analyzeWord.replace(/<[^>]+>|&[^>]+;/g, '');
               }
-
-              // if(this.list[i].examObAnswer!=''&&this.list[i].examObAnswer!=undefined){
-              // 	this.list[i].examObAnswer =this.list[i].examObAnswer.replace('[','')
-              // 	this.list[i].examObAnswer =this.list[i].examObAnswer.replace(']','')
-
-              // }
             }
             uni.setStorageSync('analysis', _this.list);
             uni.navigateTo({
-              url: 'answer-sheet?subCourseId=' + _this.subCourseId + '&seeAnswer=1',
+              url: 'answer-sheet?subCourseId=' + _this.subCourseId + '&seeAnswer=1' + '&paperIds=' + _this.paperId,
               animationType: 'pop-in',
               animationDuration: 300 });
 
@@ -278,12 +285,16 @@ var _default =
     } },
 
   onShow: function onShow() {
+    var inviteTwoRule = /^(0([.]([1-9]\d?|0[1-9])|$)|[1-9]\d{0,3}([.]\d{1,2}|$))$/;
     this.handPaper = uni.getStorageSync('handPaper');
+
 
   },
   onLoad: function onLoad(option) {
     this.subCourseId = option.subCourseId;
     this.type = option.type;
+    this.paperId = option.paperId;
+    console.log(this.paperId, '我是试卷id值', option);
   } };exports.default = _default;
 /* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./node_modules/@dcloudio/uni-mp-weixin/dist/index.js */ 1)["default"]))
 

@@ -43,29 +43,30 @@
       {
         "pagePath": "pages/live/living",
         "text": "直播",
-        "iconPath": "./static/tabbar/直播管理 拷贝 2.png",
-        "selectedIconPath": "./static/tabbar/直播管理 拷贝.png"
+        "iconPath": "./static/tabbar/defaultLiving.png",
+        "selectedIconPath": "./static/tabbar/defaultManage.png"
       },
       {
         "pagePath": "pages/course/course",
         "text": "课程",
-        "iconPath": "./static/tabbar/课程.png",
-        "selectedIconPath": "./static/tabbar/课程 拷贝.png"
+        "iconPath": "./static/tabbar/defaultCourse.png",
+        "selectedIconPath": "./static/tabbar/courseManage.png"
       },
       {
         "pagePath": "pages/questionBank/questionBank",
         "text": "题库",
-        "iconPath": "./static/tabbar/做题.png",
-        "selectedIconPath": "./static/tabbar/做题 拷贝.png"
+        "iconPath": "./static/tabbar/defaultQuestion.png",
+        "selectedIconPath": "./static/tabbar/questionManage.png"
       },
       {
         "pagePath": "pages/my/my",
         "text": "我的",
-        "iconPath": "./static/tabbar/我的.png",
-        "selectedIconPath": "./static/tabbar/我的 拷贝.png"
+        "iconPath": "./static/tabbar/myManage.png",
+        "selectedIconPath": "./static/tabbar/defaultMy.png"
       }
     ]
   },
   "permission": {},
-  "usingComponents": {}
+  "usingComponents": {},
+  "sitemapLocation": "sitemap65.json"
 }

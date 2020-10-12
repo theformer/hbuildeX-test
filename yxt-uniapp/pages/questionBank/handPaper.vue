@@ -41,7 +41,7 @@
 				<image src="/static/questionBank/passingRate.png" class="tip-png"></image>
 				<view class="tip-right">
 					<text class="tip-right-text">正确率</text>
-					<text class="tip-right-total">{{(handPaper.correctQuestionCount/handPaper.allQuestionCount)*100}}%</text>
+					<text class="tip-right-total">{{((handPaper.correctQuestionCount/handPaper.allQuestionCount)*100).toFixed(2)}}%</text>
 				</view>
 			</view>
 		</view>
@@ -66,7 +66,8 @@
 				tip:'专家建议',
 				handPaper:{},
 				subCourseId:'',
-				list:[]
+				list:[],
+				paperId:''
 				
 			}	
 		},
@@ -123,16 +124,10 @@
 										if(this.list[i].analyzeWord!=''&&this.list[i].analyzeWord!=undefined){
 											this.list[i].analyzeWord =this.list[i].analyzeWord.replace(/<[^>]+>|&[^>]+;/g, '')
 										}
-										
-										// if(this.list[i].examObAnswer!=''&&this.list[i].examObAnswer!=undefined){
-										// 	this.list[i].examObAnswer =this.list[i].examObAnswer.replace('[','')
-										// 	this.list[i].examObAnswer =this.list[i].examObAnswer.replace(']','')
-											
-										// }
 								}
 								uni.setStorageSync('analysis', this.list);
 								uni.navigateTo({
-									url: 'answer-sheet?subCourseId='+this.subCourseId+'&seeAnswer=1',
+									url: 'answer-sheet?subCourseId='+this.subCourseId+'&seeAnswer=1'+'&paperIds='+this.paperId,
 									animationType: 'pop-in',
 									animationDuration: 300
 								})
@@ -142,12 +137,16 @@
 				},
 		},
 		onShow() {
+			const inviteTwoRule = /^(0([.]([1-9]\d?|0[1-9])|$)|[1-9]\d{0,3}([.]\d{1,2}|$))$/;
 			this.handPaper = uni.getStorageSync('handPaper')
+			
 			
 		},
 		onLoad(option){
 			this.subCourseId = option.subCourseId
 			this.type = option.type
+			this.paperId = option.paperId
+			console.log(this.paperId,'我是试卷id值',option)
 		}
 	}
 </script>r

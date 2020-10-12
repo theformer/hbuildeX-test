@@ -12,6 +12,7 @@
 		 </view>
 		<view class="header">
 			<u-tabs class="tabs" 
+			v-if="opggg===true"
 			bar-height="6" 
 			active-color="#1d2088" 
 			bar-width="50" 
@@ -111,7 +112,9 @@
 				typeId:{}				,//存储是否从切换证书页面过来的数据值
 				selflist:[],
 				status:false			,//courseId不等于491时为资格证
-				courseList:[]
+				courseList:[],
+				opggg:true
+				// apply:false
 				
 			}
 		},
@@ -123,8 +126,9 @@
 		methods:{
 			//点击添加题库
 			sumQuestionClick(){
+				console.log(this.subCourseId,'我是当前项')
 				uni.navigateTo({
-					url:'sum-question?courseId='+this.courseId,
+					url:'sum-question?courseId='+this.courseId+'&subCourseId='+this.subCourseId,
 					animationType: 'pop-in',
 					animationDuration: 300
 				})
@@ -315,7 +319,7 @@
 		},
 		onShow() {
 			this.certificateList =[]
-			this.current = 0
+			// this.current = 0
 			this.tkMsg = this.$store.state.userInfo.tkMsg
 			this.courseList = uni.getStorageSync('courseList')
 			let userInfo = uni.getStorageSync('userInfo')
@@ -328,12 +332,25 @@
 				})
 			})
 			this.listCourse =  this.$courses.courses
+			this.opggg = false;
 			//判断是否从切换证书页面登入进来
 			if(this.typeId.courseIdType ==3){
 				this.courseList =[]
 				if(this.listCourse.length>0){
-					this.courseName = this.listCourse[0].name
-					this.subCourseId = this.listCourse[0].id
+					for(let i= 0;i<this.listCourse.length;i++){
+						if(this.subCourseId ==this.listCourse[i].id){
+							this.current = i
+						}
+					}
+					let a = this.listCourse.find(item=>item.id ==this.subCourseId)
+					if(!a){
+						this.current = 0
+					}
+					this.courseName = this.listCourse[this.current].name
+					this.subCourseId = this.listCourse[this.current].id
+				}else{
+					this.subCourseId = ''
+					this.courseName = ''
 				}
 				for(let i = 0;i<this.certificateList.length;i++){
 					if(this.typeId.courseId ==this.certificateList[i].value){
@@ -351,8 +368,17 @@
 					this.courseId = this.courseList[0].value
 					this.certificateId = this.courseList[0].value
 					if(this.listCourse.length>0){
-						this.courseName = this.listCourse[0].name //课程初始为教师证下课目下的第一个值
-						this.subCourseId = this.listCourse[0].id
+						for(let i= 0;i<this.listCourse.length;i++){
+							if(this.subCourseId ==this.listCourse[i].id){
+								this.current = i
+							}
+						}
+						let a = this.listCourse.find(item=>item.id ==this.subCourseId)
+						if(!a){
+							this.current = 0
+						}
+						this.courseName = this.listCourse[this.current].name //课程初始为教师证下课目下的第一个值
+						this.subCourseId = this.listCourse[this.current].id
 						var result = this.courseList[0].extra.some(item=>{
 								if(this.listCourse[0].id ==item.id){
 									return true
@@ -429,6 +455,10 @@
 				}
 				
 			}
+			this.$nextTick(() => {
+			      this.opggg = true;
+			    });
+			// this.apply = true
 		}
 	}
 </script>

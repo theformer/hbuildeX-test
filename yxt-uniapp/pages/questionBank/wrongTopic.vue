@@ -67,6 +67,39 @@
 										this.topiclist.push(e)
 									})
 								})
+							for(let i = 0;i<this.topiclist.length;i++){
+									this.topiclist[i].userAnswer =''
+									if(this.topiclist[i].a!=''&&this.topiclist[i].a!=undefined){
+										this.topiclist[i].a = this.topiclist[i].a.replace(/<[^>]+>|&[^>]+;/g, '')
+									}
+									if(this.topiclist[i].b!=''&&this.topiclist[i].b!=undefined){
+										this.topiclist[i].b = this.topiclist[i].b.replace(/<[^>]+>|&[^>]+;/g, '')
+									}
+									if(this.topiclist[i].c!=''&&this.topiclist[i].c!=undefined){
+										this.topiclist[i].c = this.topiclist[i].c.replace(/<[^>]+>|&[^>]+;/g, '')
+									}
+									if(this.topiclist[i].d!=''&&this.topiclist[i].d!=undefined){
+										this.topiclist[i].d = this.topiclist[i].d.replace(/<[^>]+>|&[^>]+;/g, '')
+									}
+									if(this.topiclist[i].e!=''&&this.topiclist[i].e!=undefined){
+										this.topiclist[i].e = this.topiclist[i].e.replace(/<[^>]+>|&[^>]+;/g, '')
+									}
+									if(this.topiclist[i].f!=''&&this.topiclist[i].f!=undefined){
+										this.topiclist[i].f = this.topiclist[i].f.replace(/<[^>]+>|&[^>]+;/g, '')
+									}
+									if(this.topiclist[i].g!=''&&this.topiclist[i].g!=undefined){
+										this.topiclist[i].g= this.topiclist[i].g.replace(/<[^>]+>|&[^>]+;/g, '')
+									}
+									if(this.topiclist[i].questionTitle!=''&&this.topiclist[i].questionTitle!=undefined){
+										this.topiclist[i].questionTitle = this.topiclist[i].questionTitle.replace(/<[^>]+>|&[^>]+;/g, '')
+									}
+									if(this.topiclist[i].analyzeWord!=''&&this.topiclist[i].analyzeWord!=undefined){
+										this.topiclist[i].analyzeWord =this.topiclist[i].analyzeWord.replace(/<[^>]+>|&[^>]+;/g, '')
+									}
+									if(this.topiclist[i].subAnswer!=''&&this.topiclist[i].subAnswer!=undefined){
+										this.topiclist[i].subAnswer = this.topiclist[i].subAnswer.replace(/<[^>]+>|&[^>]+;/g, '')
+									}
+							}
 								uni.setStorageSync('topiclist', this.topiclist);
 								uni.navigateTo({
 									url: 'answer-sheet?type='+this.type+'&subCourseId='+this.subCourseId+'&isShow=1',

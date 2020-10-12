@@ -52,8 +52,12 @@
 									uni.showToast({
 										icon: 'none',
 										title: res.data.message
-									});
-									return
+									})
+									setTimeout(function(){
+										uni.navigateBack({delta:1,
+										animationType: 'pop-out',
+										animationDuration: 200
+									})},2000)
 								} else {
 									uni.setStorageSync('topiclist', list);
 									uni.navigateTo({
@@ -84,7 +88,11 @@
 											icon: 'none',
 											title: res.data.message
 										});
-										return
+										setTimeout(function(){
+											uni.navigateBack({delta:1,
+											animationType: 'pop-out',
+											animationDuration: 200
+										})},2000)
 									} else {
 										uni.setStorageSync('topiclist', list.questionList);
 										uni.navigateTo({

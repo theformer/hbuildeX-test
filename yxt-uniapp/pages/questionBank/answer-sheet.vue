@@ -119,9 +119,9 @@
 								</view>
 							</checkbox-group>
 							<!-- 简答题 -->
-							<view v-if="item.questionTypeId ==5&&!clear">
+							<view v-if="item.questionTypeId ==5">
 								<!-- <rich-text :nodes="item.questionTitle"></rich-text> -->
-								<textarea style="height:245rpx;" class="textarea-style" @input="textBlurClick" :value="item.examObAnswer" type="textarea" maxlength="-1" :disabled="activeDisabled" :auto-height="true"></textarea>
+								<textarea style="height:245rpx;"  v-if="!clear == true" class="textarea-style" @input="textBlurClick" :value="item.examObAnswer" type="textarea" maxlength="-1" :disabled="activeDisabled" :auto-height="true"></textarea>
 							</view>
 							<view v-show=" questionIndex+1 == total&& seeAnswer!=1">
 								<button type="primary"  class="btn" @click="saveClick">保存</button>
@@ -190,17 +190,17 @@
 								</view>
 							</radio-group>
 							<!-- 简答题 -->
-							<view v-if="item.questionTypeId ==4&&!clear" style="margin: 20rpx auto;">
-								<textarea style="height:245rpx;" class="textarea-style" @input="textBlurClick" :value="item.examObAnswer" type="textarea" maxlength="-1" :disabled="activeDisabled" :auto-height="true"></textarea>
+							<view v-if="item.questionTypeId ==4" style="margin: 20rpx auto;">
+								<textarea style="height:245rpx;" v-if="!clear == true" class="textarea-style" @input="textBlurClick" :value="item.examObAnswer" type="textarea" maxlength="-1" :disabled="activeDisabled" :auto-height="true"></textarea>
 							</view>
-							<view v-if=" questionIndex+1 == total&& !isShow||seeAnswer">
+							<view v-if=" questionIndex+1 == total&& isShow !='1'">
 								<button type="primary"  class="btn" @click="saveClick">保存</button>
 							</view>
 						</view>
 						<!-- 正确答案 -->
-						<view  class="margin-top" v-show="!seeOK||isShowOk">
+						<view  class="margin-top" v-show="!seeOK||isShowOk" style="margin-top: 32rpx;">
 							<view class="cu-bar">
-								<view class="action  text-grey">
+								<view class="action  text-grey" v-if="">
 									<text>参考答案：</text>
 									<text class="text-violet">{{item.obAnswer}}</text>
 								</view>
@@ -216,7 +216,7 @@
 							</view>
 							<view class="text-content padding  text-grey">
 								<text class="answer-text">答案解析</text>
-								<text >{{item.analyzeWord}}</text>
+								<text >{{item.analyzeWord||item.subAnswer}}</text>
 							</view>
 						</view>
 					</swiper-item>
@@ -242,7 +242,7 @@
 			</view>
 		</view>
 		<!-- 答题卡 -->
-		<view>
+		<view v-if="!modalShow&&answerSheet">
 			<u-popup v-model="answerSheet" class="popup" mode="bottom">
 				<view class="popup-head">
 					答题卡
@@ -328,7 +328,6 @@
 						</view>
 					</view>
 				</view>
-			
 			</u-popup>
 		</view>
 		<!-- 提交弹框 -->
@@ -339,7 +338,8 @@
 			:show-title="false"
 			:show-confirm-button="false"
 			:show-cancel-button="false"
-			width="464rpx">
+			width="464rpx"
+			>
 			<view class="modal">
 				<view class="modal-head">
 					<image class="modal-png" src="/static/questionBank/finished.png"></image>
@@ -399,7 +399,7 @@
 				analysis:[]				,//得分页面调用接口存储已选答案
 				seeOK:true,
 				isShowOk:false,
-				clear:false,
+				clear:false, 
 				paperId:''				,//阶段测试试卷id
 				chapterId:''			,//章节Id 判断是否从单项练习页面进来
 			}
@@ -558,7 +558,7 @@
 							url: this.baseUrl + '/gxplatform/tk/examination/saveExamResult',
 							data:{
 								questionJson:this.questionJson,
-								paperId:this.chapterId,
+								paperId:this.chapterId||this.paperId,
 								subCourseId:this.subCourseId
 							},
 							method:"POST",
@@ -578,7 +578,7 @@
 									uni.setStorageSync('question',this.questionJson)
 									uni.setStorageSync('handPaper', list);
 									uni.navigateTo({
-										url: 'handPaper?subCourseId='+this.subCourseId+'&type='+this.type,
+										url: 'handPaper?subCourseId='+this.subCourseId+'&type='+this.type+'&paperId='+this.paperId,
 										animationType: 'pop-in',
 										animationDuration: 300
 									})
@@ -1034,20 +1034,14 @@
 		
 		},
 		onLoad:function(option){
-			console.log(option,'我是option')
 			this.subCourseId = option.subCourseId
 			this.type = option.type
 			this.seeAnswer = option.seeAnswer
 			this.isShow = option.isShow
 			this.paperId = option.paperId			//阶段测试试卷id
 			this.chapterId = option.chapterId
+			console.log(option,'我是值')
 			//isShow是从错题页面进来的，判断是否要显示底部tabber 1是从错题本进来 0是从别的方式进来 seeAnswer1是从得分页面
-			if(this.isShow ==undefined||this.isShow==''){
-				this.isShow = 0
-			}
-			if(this.seeAnswer==undefined||this.seeAnswer==''){
-				this.seeAnswer = 0
-			}
 			if(this.isShow ==1){
 				this.isShowOk =true
 				this.seeOK = false
@@ -1058,7 +1052,12 @@
 				this.activeDisabled = true
 				this.seeOK = false
 				this.isShowOk = true
+				this.isShow = 1
 				this.clear = true
+				if(option.paperIds =='undefined'){
+					option.paperIds = ''
+				}
+				this.paperId  = option.paperIds
 				this.analysis = uni.getStorageSync('analysis')
 				
 			}
@@ -1070,7 +1069,6 @@
 <style scoped lang="scss">
 	.modal-style{
 		.modal{
-			height: 502rpx;
 			width: 464rpx;
 			.modal-head{
 				.modal-png{
@@ -1092,7 +1090,7 @@
 			}
 			.modal-footer{
 				display: flex;
-				
+				margin-bottom: 20rpx;
 				.quitClick{
 					width: 184rpx;
 					height: 55rpx;
@@ -1260,6 +1258,7 @@
 				color:rgba(51,51,51,1);
 				line-height:42rpx;
 				display: block;
+				margin-top: 32rpx;
 				margin-bottom: 32rpx;
 			}
 			.answer-explain{

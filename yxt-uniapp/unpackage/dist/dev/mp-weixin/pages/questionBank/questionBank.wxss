@@ -198,7 +198,8 @@
   -webkit-box-pack: center;
   -webkit-justify-content: center;
           justify-content: center;
-  box-shadow: 0px 2px 10px 0px rgba(0, 0, 0, 0.1);
+  -webkit-box-shadow: 0px 2px 10px 0px rgba(0, 0, 0, 0.1);
+          box-shadow: 0px 2px 10px 0px rgba(0, 0, 0, 0.1);
   border-radius: 10px;
 }
 .container .container-column.data-v-0081f346 {

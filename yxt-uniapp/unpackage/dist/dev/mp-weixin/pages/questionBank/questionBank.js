@@ -222,6 +222,7 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
 var _default =
 {
   data: function data() {
@@ -247,8 +248,10 @@ var _default =
       typeId: {}, //存储是否从切换证书页面过来的数据值
       selflist: [],
       status: false, //courseId不等于491时为资格证
-      courseList: [] };
-
+      courseList: [],
+      opggg: true
+      // apply:false
+    };
 
   },
   created: function created() {
@@ -259,8 +262,9 @@ var _default =
   methods: {
     //点击添加题库
     sumQuestionClick: function sumQuestionClick() {
+      console.log(this.subCourseId, '我是当前项');
       uni.navigateTo({
-        url: 'sum-question?courseId=' + this.courseId,
+        url: 'sum-question?courseId=' + this.courseId + '&subCourseId=' + this.subCourseId,
         animationType: 'pop-in',
         animationDuration: 300 });
 
@@ -451,7 +455,7 @@ var _default =
 
   onShow: function onShow() {var _this3 = this;
     this.certificateList = [];
-    this.current = 0;
+    // this.current = 0
     this.tkMsg = this.$store.state.userInfo.tkMsg;
     this.courseList = uni.getStorageSync('courseList');
     var userInfo = uni.getStorageSync('userInfo');
@@ -464,18 +468,31 @@ var _default =
 
     });
     this.listCourse = this.$courses.courses;
+    this.opggg = false;
     //判断是否从切换证书页面登入进来
     if (this.typeId.courseIdType == 3) {
       this.courseList = [];
       if (this.listCourse.length > 0) {
-        this.courseName = this.listCourse[0].name;
-        this.subCourseId = this.listCourse[0].id;
+        for (var i = 0; i < this.listCourse.length; i++) {
+          if (this.subCourseId == this.listCourse[i].id) {
+            this.current = i;
+          }
+        }
+        var a = this.listCourse.find(function (item) {return item.id == _this3.subCourseId;});
+        if (!a) {
+          this.current = 0;
+        }
+        this.courseName = this.listCourse[this.current].name;
+        this.subCourseId = this.listCourse[this.current].id;
+      } else {
+        this.subCourseId = '';
+        this.courseName = '';
       }
-      for (var i = 0; i < this.certificateList.length; i++) {
-        if (this.typeId.courseId == this.certificateList[i].value) {
-          this.courseList.push(this.certificateList[i]),
+      for (var _i = 0; _i < this.certificateList.length; _i++) {
+        if (this.typeId.courseId == this.certificateList[_i].value) {
+          this.courseList.push(this.certificateList[_i]),
           this.courseId = this.typeId.courseId,
-          this.certificate = this.certificateList[i].label;
+          this.certificate = this.certificateList[_i].label;
         }
       }
       uni.setStorageSync('courseList', this.courseList);
@@ -487,8 +504,17 @@ var _default =
       this.courseId = this.courseList[0].value;
       this.certificateId = this.courseList[0].value;
       if (this.listCourse.length > 0) {
-        this.courseName = this.listCourse[0].name; //课程初始为教师证下课目下的第一个值
-        this.subCourseId = this.listCourse[0].id;
+        for (var _i2 = 0; _i2 < this.listCourse.length; _i2++) {
+          if (this.subCourseId == this.listCourse[_i2].id) {
+            this.current = _i2;
+          }
+        }
+        var _a = this.listCourse.find(function (item) {return item.id == _this3.subCourseId;});
+        if (!_a) {
+          this.current = 0;
+        }
+        this.courseName = this.listCourse[this.current].name; //课程初始为教师证下课目下的第一个值
+        this.subCourseId = this.listCourse[this.current].id;
         var result = this.courseList[0].extra.some(function (item) {
           if (_this3.listCourse[0].id == item.id) {
             return true;
@@ -565,6 +591,10 @@ var _default =
       }
 
     }
+    this.$nextTick(function () {
+      _this3.opggg = true;
+    });
+    // this.apply = true
   } };exports.default = _default;
 /* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./node_modules/@dcloudio/uni-mp-weixin/dist/index.js */ 1)["default"]))
 

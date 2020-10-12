@@ -78,6 +78,7 @@
 </template>
 
 <script>
+	let watchTime
 	export default{
 		
 		data(){
@@ -111,17 +112,16 @@
 				videoId:''			,//录播视频标号Id
 				itemIdVal:'',
 				userId:''			,//用户id
-				itemId:[],			//当前切换视频id
 				startTime:0		,//后端返的开始时间
 				realTimeOfWeb:0	,//前端计算的播放时长
 				studyTime:0			,//学习时长（秒）
 				studyprogress:0 	,//学习进度(秒)
-				watchTime:0,		
+				watchTime,		
 				duration:0,			//总时长
 				pauseTime:0			,//点击切换到别的时间段存储
-				oneId:''			,//当你点击暂停时向里面添加一个此时的id
 				seeTime:[]			,//存储衣蛾当前的播放时间
-				listIndex:[]		//存储当前时间
+				listIndex:[]		,//存储当前时间
+				arr:[]				//存放当前id的集合
 			}
 		},
 		created () {
@@ -132,7 +132,12 @@
 		onReady:function(res){
 			this.videoContext = uni.createVideoContext('video', this) 
 		},
-		
+		onHide(){
+			if(this.watchTime) {  
+			        clearInterval(this.watchTime);  
+			        this.watchTime = null;  
+			    }  
+		},
 		methods:{
 			addWatchTime:function() {
 			    this.studyTime += 0.25;
@@ -140,21 +145,18 @@
 			//点击播放按钮
 			playClick:function(e){
 				let _this = this
-				_this.watchTime=setInterval(function () {
+				this.watchTime=setInterval(function () {
 				    _this.addWatchTime();
 				}, 250)
-				_this.getAllPlayVideo()
-				console.log(_this.watchTime,'我是当前进度条时间',this.studyTime)
+				this.getAllPlayVideo()
 			},
 			//暂停按钮
 			pauseClick:function(e){
+				this.saveWatchRecordFun()
 				if(this.watchTime){
 					clearInterval(this.watchTime)
 					this.watchTime = 0
 				}
-				this.saveWatchRecordFun()
-				this.studyTime=0;
-				this.itemId.push(this.oneId)
 			},
 			//结束按钮
 			endedClick:function(e){
@@ -175,37 +177,15 @@
 			},
 			//进度条发生变化
 			timeupdateClick:function(e){
-				
+				this.watchTime = e.detail.currentTime
 			},
 			//录播学习添加记录
 			saveWatchRecordFun:function(e){
 				let timestamp = new Date().getTime()
 				this.realTimeOfWeb = timestamp - this.startTime
-				if(this.itemId.length >1){
-					//根据存储的科目id值进行判断，如果俩个id一样表明同一个视频，不一样存储之前看的那个视频
-					if(this.itemId[this.itemId.length-1]!==this.itemId[this.itemId.length-2]){
-						this.itemIdVal = this.itemId[this.itemId.length-2]
-						this.watchTime = this.studyTime + this.initialTime
-					}else{
-						this.itemIdVal = this.itemId[this.itemId.length-1]
-						for(let i = 0;i<this.listIndex.length;i++){
-							for(let j=0;j<this.listInde[j].length;j++){
-								if(this.itemIdVal == this.listInde[j].id){
-									this.watchTime = this.listInde[j].watchTime +this.studyTime
-								}
-							}
-						}
-					}
-				}else{
-					let stringId =  this.itemId
-					this.itemIdVal = stringId[0]
-					this.watchTime = this.studyTime + this.initialTime
-					console.log(this.watchTime,'我是多个id走的',)
-				}
 				if(this.studyTime>1 && this.duration>1){
 					 if(this.watchTime>this.duration){
 						 this.watchTime =  this.studyTime
-						 console.log('播放完了以后走的值为学习了多少秒的值',this.watchTime)
 						}
 					uni.request({
 						url:this.baseUrl+'/gxplatform/front/learning/updateVideoLearningProgress',
@@ -216,7 +196,6 @@
 							realTimeOfWeb:this.realTimeOfWeb,	//前端计算的视频播放时长
 							startTime:this.startTime,			//后台记录开始播放时长
 							videoId:this.itemIdVal				,//视频id
-							
 						},
 						method: "POST",
 						header: {
@@ -226,27 +205,12 @@
 						success: (res) => {
 							if(res.code ==1){
 								return
-							}else{
-						
 							}
 						}
 					})
 				 }
-				
 			},
-			//跳转到别的页面向服务器发送数据
-			getAllPlayVideo:function(){
-				if(this.itemId.length >1){
-					//根据存储的科目id值进行判断，如果俩个id一样表明同一个视频，不一样存储之前看的那个视频
-					if(this.itemId[this.itemId.length-1]!==this.itemId[this.itemId.length-2]){
-						this.itemIdVal = this.itemId[this.itemId.length-2]
-					}else{
-						this.itemIdVal = this.itemId[this.itemId.length-1]
-					}
-				}else{
-					let stringId =  this.itemId
-					this.itemIdVal = stringId[0]
-				}
+			saveStartTimeBeforePlay:function(e){
 				uni.request({
 					url:this.baseUrl+'/gxplatform/front/learning/saveStartTimeBeforePlay',
 					data:{
@@ -267,12 +231,17 @@
 					},
 				})
 			},
+			//跳转到别的页面向服务器发送数据
+			getAllPlayVideo:function(videoItem){
+				if(videoItem!=undefined){
+					this.itemIdVal = videoItem.id	
+				}
+				this.saveStartTimeBeforePlay()
+			},
 			//点击切换video的地址
 			changVideosUrl(videoItem,videoIndex){
-				clearInterval(this.watchTime)
 				this.textClick = videoItem.videoTitle
-				this.oneId = videoItem.id
-				this.itemId.push(videoItem.id)
+				let itemUrl = videoItem.videoUrl
 				if(videoItem.duration.length>0){
 					this.duration = videoItem.duration
 						this.duration = this.duration.split(':')
@@ -281,15 +250,19 @@
 						}else if(this.duration.length==2){
 							this.duration =parseInt(this.duration[0]*60)+parseInt(this.duration[1]);
 						}else{
-							this.duration =parseInt(e.duration[0])
+							this.duration =parseInt(this.duration[0])
 						}
 				}
 				let itemName = videoItem.videoTitle
 				//播放视频钱，服务端存储当前时间
 				let timestamp = new Date().getTime()
 				this.realTimeOfWeb = timestamp - this.startTime
-				this.getAllPlayVideo()
-				//更新接口
+				this.getAllPlayVideo(videoItem)
+				this.getChapterVideos(itemName,itemUrl)
+				// this.initialTime  = videoItem.watchTime
+			},
+			//更新接口
+			getChapterVideos:function(itemName,itemUrl){
 				if(this.certificateId!=491){
 					uni.request({
 						url: this.baseUrl + '/gxplatform/front/video/getChapterVideosBySubCourseId',
@@ -303,13 +276,13 @@
 						},
 						success: (res) => {
 							if(res.data.code==1){
+								this.videoSrc =itemUrl
 								let list = res.data.data
 								this.listIndex =  res.data.data
 								list.forEach((ele)=>{
 									ele.videos.forEach(e=>{
 										if(itemName ==e.videoTitle){
 											this.initialTime = e.watchTime
-											this.videoSrc=e.videoUrl.replace('tk.360xkw.com','s1.v.360xkw.com')
 											this.videoContext.seek(this.initialTime)
 										}
 									})
@@ -332,14 +305,14 @@
 						},
 						success: (res) => {
 							if(res.data.code==1){
+								this.videoSrc =videoItem.videoUrl
 								let list = res.data.data.chapterVideosList
-								
 								list.forEach(ele=>{
 									ele.videoList.forEach(e=>{
 										if(itemName ==e.videoTitle){
 											this.initialTime = e.watchTime
 											this.videoContext.seek(this.initialTime) 
-											this.videoSrc=e.videoUrl.replace('tk.360xkw.com','s1.v.360xkw.com')
+											
 										}
 									})
 								})
@@ -364,8 +337,6 @@
 				if(this.listCourse!=undefined&&this.courseIndex){
 					this.courseName = this.listCourse[this.courseIndex].name
 				}
-				console.log(this.listCourse[this.courseIndex],this.courseIndex)
-			
 				uni.request({
 					url: this.baseUrl + '/gxplatform/front/video/getChapterVideosBySubCourseId',
 					data: {
@@ -385,7 +356,6 @@
 								})
 							})
 							this.videos = list
-							console.log(this.videos,'好家伙我不会没有任何变动把')
 							this.videoSrc = this.videos[0].videos[0].videoUrl
 							this.videos[0].open = true
 							this.textClick = this.videos[0].videos[0].videoTitle
@@ -405,12 +375,16 @@
 			},
 			chooseSubject(){
 				this.popupShow = true;
+				if(this.courseIndex==''){
+					this.courseIndex = 0
+				}
 				if(this.stringing ==''){
 					this.stringing = this.listCourse[0].name
 				}else{
-					if(this.listCourse[this.courseIndex].id){
+					if(this.listCourse[this.courseIndex].id !=''){
 						this.subCourseId = this.listCourse[this.courseIndex].id
 					}
+					
 				}
 			},
 			coursesVal(index){
@@ -441,10 +415,11 @@
 					if(this.typeId.courseId ==this.certificateList[i].value){
 						this.courseList.push(this.certificateList[i]),
 						this.listCourse = this.certificateList[i].extra,
-						this.courseName = this.certificateList[i].extra[0].name,
-						this.subCourseId = this.certificateList[i].extra[0].id,
+						this.courseName =this.certificateList[i].extra[0].name,
+						this.subCourseId =this.certificateList[i].extra[0].id,
 						this.certificate = this.certificateList[i].label
 						this.certificateId = this.certificateList[i].value
+						this.stringing = this.listCourse[0].name
 					}
 				}
 				if(this.courseList.length>1){
@@ -459,6 +434,7 @@
 						if(this.certificateId ==this.certificateList[i].value){
 							this.listCourse =this.certificateList[i].extra
 							this.certificate = this.certificateList[i].label
+							this.stringing = this.listCourse[0].name
 							for(let j =0;j<this.certificateList[i].extra.length;j++){
 								if(this.subCourseId ==this.certificateList[i].extra[j].id){
 									this.courseName = this.certificateList[i].extra[j].name
@@ -472,12 +448,14 @@
 					this.listCourse = this.courseList[0].extra //存储课程tabs
 					this.courseName = this.courseList[0].extra[0].name //课程初始为教师证下课目下的第一个值
 					this.subCourseId = this.courseList[0].extra[0].id
+					this.stringing = this.listCourse[0].name
 				}else{
 					this.subCourseId = this.certificateList[0].extra[0].id
 					this.certificate = this.certificateList[0].label
 					this.certificateId = this.certificateList[0].value
 					this.listCourse = this.certificateList[0].extra //存储课程tabs
 					this.courseName = this.certificateList[0].extra[0].name //课程初始为教师证下课目下的第一个值
+					this.stringing = this.listCourse[0].name
 					//第一次进入课程页面直接存储id值
 					uni.setStorageSync('courseList',[this.certificateList[0]])
 				}
@@ -504,6 +482,10 @@
 							})
 						})
 						this.videos = list
+						this.$nextTick(() => {
+						this.$refs.collapse.init()
+						})
+						//上次观看记录节点
 						if(this.videos.length>0){
 							uni.request({
 								url: this.baseUrl + '/gxplatform/front/video/getLatestVideoLogByStudentId',
@@ -521,13 +503,12 @@
 										this.videoSrc = res.data.data.videoUrl
 										this.initialTime  = res.data.data.watchTime
 										this.videoId  = res.data.data.videoId
-										this.oneId = res.data.data.videoId	
+										this.arr.push(res.data.data.videoId)
+										this.itemIdVal = res.data.data.videoId
 										this.subCourseId = res.data.data.subcourseId
-										this.itemId.push(this.videoId)
 										this.certificateList.forEach(ele=>{
 											ele.extra.forEach(e=>{
 												if(this.subCourseId ==e.id){
-													console.log(this.subCourseId,'应该没有问题',e.id, ele)
 													this.listCourse = ele.extra,
 													this.courseName = e.name,
 													this.certificate = ele.label
@@ -557,7 +538,6 @@
 													this.videos = list
 													this.videos.forEach(ele =>{
 														ele.videos.forEach(e=>{
-															console.log(this.videoId,'好家伙为啥不出来呢',ele)
 															if(e.id ==this.videoId){
 																ele.open = true
 																this.textClick = e.videoTitle
@@ -573,12 +553,13 @@
 															}
 														})
 													})
+													this.$nextTick(() => {
+													this.$refs.collapse.init()
+													})
 												}
 											},
 										})
-										this.$nextTick(() => {
-										this.$refs.collapse.init()
-										})
+			
 									}
 								}
 							})
@@ -670,6 +651,10 @@
 			.titleTextCol{
 				display: block;
 				line-height: 87rpx;
+				overflow: hidden;
+				text-overflow:ellipsis;
+				white-space: nowrap;
+				width: 483rpx;
 			}
 			
 		}

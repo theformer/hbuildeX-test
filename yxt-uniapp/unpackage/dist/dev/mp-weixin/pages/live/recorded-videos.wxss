@@ -129,6 +129,10 @@
 .collapse-conteinar-left .titleText .titleTextCol.data-v-2f95f22a {
   display: block;
   line-height: 87rpx;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  width: 483rpx;
 }
 .click-finish.data-v-2f95f22a {
   font-size: 26rpx;

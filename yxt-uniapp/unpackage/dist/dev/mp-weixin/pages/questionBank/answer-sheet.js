@@ -584,7 +584,7 @@ var _default =
             url: this.baseUrl + '/gxplatform/tk/examination/saveExamResult',
             data: {
               questionJson: this.questionJson,
-              paperId: this.chapterId,
+              paperId: this.chapterId || this.paperId,
               subCourseId: this.subCourseId },
 
             method: "POST",
@@ -604,7 +604,7 @@ var _default =
                 uni.setStorageSync('question', _this2.questionJson);
                 uni.setStorageSync('handPaper', list);
                 uni.navigateTo({
-                  url: 'handPaper?subCourseId=' + _this2.subCourseId + '&type=' + _this2.type,
+                  url: 'handPaper?subCourseId=' + _this2.subCourseId + '&type=' + _this2.type + '&paperId=' + _this2.paperId,
                   animationType: 'pop-in',
                   animationDuration: 300 });
 
@@ -1060,20 +1060,14 @@ var _default =
 
   },
   onLoad: function onLoad(option) {
-    console.log(option, '我是option');
     this.subCourseId = option.subCourseId;
     this.type = option.type;
     this.seeAnswer = option.seeAnswer;
     this.isShow = option.isShow;
     this.paperId = option.paperId; //阶段测试试卷id
     this.chapterId = option.chapterId;
+    console.log(option, '我是值');
     //isShow是从错题页面进来的，判断是否要显示底部tabber 1是从错题本进来 0是从别的方式进来 seeAnswer1是从得分页面
-    if (this.isShow == undefined || this.isShow == '') {
-      this.isShow = 0;
-    }
-    if (this.seeAnswer == undefined || this.seeAnswer == '') {
-      this.seeAnswer = 0;
-    }
     if (this.isShow == 1) {
       this.isShowOk = true;
       this.seeOK = false;
@@ -1084,7 +1078,12 @@ var _default =
       this.activeDisabled = true;
       this.seeOK = false;
       this.isShowOk = true;
+      this.isShow = 1;
       this.clear = true;
+      if (option.paperIds == 'undefined') {
+        option.paperIds = '';
+      }
+      this.paperId = option.paperIds;
       this.analysis = uni.getStorageSync('analysis');
 
     }

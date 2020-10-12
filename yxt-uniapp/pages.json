@@ -164,25 +164,25 @@
 		{
 			"pagePath":"pages/live/living",  
 			"text":"直播",
-			"iconPath":"./static/tabbar/直播管理 拷贝 2.png",			//默认图标
-			"selectedIconPath":"./static/tabbar/直播管理 拷贝.png"	//点击选中以后的图片
+			"iconPath":"./static/tabbar/defaultLiving.png",			//默认图标
+			"selectedIconPath":"./static/tabbar/defaultManage.png"	//点击选中以后的图片
 		},{
 			"pagePath":"pages/course/course",
 			"text":"课程",
-			"iconPath":"./static/tabbar/课程.png",
-			"selectedIconPath":"./static/tabbar/课程 拷贝.png"
+			"iconPath":"./static/tabbar/defaultCourse.png",
+			"selectedIconPath":"./static/tabbar/courseManage.png"
 		},
 		{
 			"pagePath":"pages/questionBank/questionBank",
 			"text":"题库",
-			"iconPath":"./static/tabbar/做题.png",
-			"selectedIconPath":"./static/tabbar/做题 拷贝.png"
+			"iconPath":"./static/tabbar/defaultQuestion.png",
+			"selectedIconPath":"./static/tabbar/questionManage.png"
 		},
 		{
 			"pagePath":"pages/my/my",
 			"text":"我的",
-			"iconPath":"./static/tabbar/我的.png",
-			"selectedIconPath":"./static/tabbar/我的 拷贝.png"
+			"iconPath":"./static/tabbar/myManage.png",
+			"selectedIconPath":"./static/tabbar/defaultMy.png"
 		}]
 	}
 }

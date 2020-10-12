@@ -201,7 +201,6 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
-//
 var _default =
 {
   data: function data() {
@@ -216,8 +215,9 @@ var _default =
       certificateList: [], //存储证书和证书下的课程集合
       courseIndex: '', //当前科目所在位置索引
       courseId: '', //判断是在哪个科目
-      stringing: '' //存储一个变量，为listCourse[index]的值，判断是否点击变色
-    };
+      stringing: '', //存储一个变量，为listCourse[index]的值，判断是否点击变色
+      textClick: '' };
+
   },
   OnReady: function OnReady(res) {
     //获取video上下文videoContext对象
@@ -245,6 +245,7 @@ var _default =
     //点击开始播放
     changVideosClick: function changVideosClick(item) {
       this.videoSrc = item.videoUrl;
+      this.textClick = item.videoTitle;
     },
     //点击保存按钮切科目切换视频
     saveClick: function saveClick(val) {var _this = this;
@@ -271,6 +272,7 @@ var _default =
             });
             _this.videos = list;
             _this.videoSrc = list[0].videoUrl;
+            _this.textClick = list[0].videoTitle;
           } else {
             _this.videos = [];
             _this.videoSrc = '';
@@ -344,6 +346,7 @@ var _default =
 
           _this2.videos = list;
           _this2.videoSrc = list[0].videoUrl;
+          _this2.textClick = list[0].videoTitle;
         } else {
           _this2.videos = [];
           _this2.videoSrc = '';

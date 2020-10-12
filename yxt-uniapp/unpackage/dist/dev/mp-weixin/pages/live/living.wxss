@@ -288,7 +288,8 @@
 .living-course.data-v-541d5b43 {
   height: 190rpx;
   background: white;
-  box-shadow: 0px 2px 10px 0px rgba(0, 0, 0, 0.1);
+  -webkit-box-shadow: 0px 2px 10px 0px rgba(0, 0, 0, 0.1);
+          box-shadow: 0px 2px 10px 0px rgba(0, 0, 0, 0.1);
   border-radius: 10px;
   display: -webkit-box;
   display: -webkit-flex;
@@ -333,7 +334,8 @@
   width: 328rpx;
   height: 120rpx;
   background: white;
-  box-shadow: 0px 2px 10px 0px rgba(0, 0, 0, 0.1);
+  -webkit-box-shadow: 0px 2px 10px 0px rgba(0, 0, 0, 0.1);
+          box-shadow: 0px 2px 10px 0px rgba(0, 0, 0, 0.1);
   border-radius: 16px;
   margin: 38rpx 16rpx 32rpx 32rpx;
 }

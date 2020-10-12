@@ -44,9 +44,8 @@
 								<image src="/static/live/square.png" class="mtt-left-img"></image>
 								<image src="/static/live/dottedLine.png" class="mtt-left-line" mode=""></image>
 							</view>
-							
 							<view class="mtt-left-text"  @tap="changVideosClick(item)">
-								<text>{{item.videoTitle}}</text>
+								<text  :class="textClick==item.videoTitle?'violet':'constant'">{{item.videoTitle}}</text>
 							</view>
 						</view>
 						<view class="" @tap="changVideosClick(item)">
@@ -80,7 +79,8 @@
 				 certificateList:[]			,//存储证书和证书下的课程集合
 				 courseIndex:'',			//当前科目所在位置索引
 				 courseId:''				,//判断是在哪个科目
-				 stringing:''				//存储一个变量，为listCourse[index]的值，判断是否点击变色
+				 stringing:''				,//存储一个变量，为listCourse[index]的值，判断是否点击变色
+				 textClick:''
 			}
 		},
 		OnReady:function(res){
@@ -109,6 +109,7 @@
 			//点击开始播放
 			changVideosClick(item){
 				this.videoSrc=item.videoUrl
+				this.textClick = item.videoTitle
 			},
 			//点击保存按钮切科目切换视频
 			saveClick(val){
@@ -135,6 +136,7 @@
 							})
 							this.videos = list
 							this.videoSrc = list[0].videoUrl
+							this.textClick = list[0].videoTitle
 						} else {
 							this.videos = []
 							this.videoSrc = ''
@@ -208,6 +210,7 @@
 					
 						this.videos = list
 						this.videoSrc = list[0].videoUrl
+							this.textClick = list[0].videoTitle
 					} else {
 						this.videos =[]
 						this.videoSrc = ''
@@ -247,6 +250,15 @@
 		
 		}
 	}
+	.line-grey{
+		background-color:  #dfe0fc;
+		color: #000000;
+		margin: 15rpx 20rpx;
+	}
+	.bg-haveFinashed{
+		background-color: #ececed;
+		margin: 15rpx 20rpx;
+	}
 	.dia-height{
 		height: 60%;
 		.choose-subject{
@@ -260,15 +272,7 @@
 			display: flex;
 			flex-direction: row;
 			flex-wrap: wrap;
-			.line-grey{
-				background-color:  #dfe0fc;
-				color: #000000;
-				margin: 15rpx 20rpx;
-			}
-			.bg-haveFinashed{
-				background-color: #ececed;
-				margin: 15rpx 20rpx;
-			}
+		
 		}
 	}
 	.course-explain{
@@ -366,6 +370,12 @@
 			width: 28rpx;
 			height: 29rpx;
 		}
+	}
+	.violet{
+		color: #1d2088;
+	}
+	.constant{
+		color:rgba(102,100,100,1);
 	}
 	.header{
 		height: 420rpx;

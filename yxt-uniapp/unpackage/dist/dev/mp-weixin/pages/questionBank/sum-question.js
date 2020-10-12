@@ -208,10 +208,8 @@ __webpack_require__.r(__webpack_exports__);
       this.subCourseId = this.courseList[e].id;
       this.diaCourse.push({ name: this.subCourse, id: this.subCourseId });
       this.courseList.splice(e, 1);
-      console.log('为什么id会没有', this.diaCourse, this.courseList, '我是下拉');
     },
     saveClick: function saveClick(e) {
-      console.log(this.diaCourse, '明明有的啊，真是奇怪啊');
       this.$courses.courses = this.diaCourse;
       uni.showToast({
         icon: 'none',

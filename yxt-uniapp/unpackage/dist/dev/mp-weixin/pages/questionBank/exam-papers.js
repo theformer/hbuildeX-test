@@ -222,7 +222,7 @@ var _default =
             } else {
               uni.setStorageSync('topiclist', list.questionList);
               uni.navigateTo({
-                url: 'answer-sheet?paperId=' + _this.paperId,
+                url: 'answer-sheet?paperId=' + _this.paperId + '&subCourseId=' + _this.subCourseId,
                 animationType: 'pop-in',
                 animationDuration: 300 });
 
@@ -237,7 +237,6 @@ var _default =
     this.tkMsg = this.$store.state.userInfo.tkMsg;
     if (this.subCourseId && this.courseId) {
       if (this.courseId != 491) {
-        console.log(this.courseId != 491, '成立吗');
         uni.request({
           url: this.baseUrl + '/gxplatform/front/tk/getPaperListBySubCourseId',
           data: {
@@ -257,7 +256,11 @@ var _default =
                 title: res.data.message });
 
               _this2.list = [];
-              return;
+              setTimeout(function () {
+                uni.navigateBack({ delta: 1,
+                  animationType: 'pop-out',
+                  animationDuration: 200 });
+              }, 2000);
             } else {
               _this2.list = list;
             }
@@ -282,7 +285,11 @@ var _default =
                 title: res.data.message });
 
               _this2.list = [];
-              return;
+              setTimeout(function () {
+                uni.navigateBack({ delta: 1,
+                  animationType: 'pop-out',
+                  animationDuration: 200 });
+              }, 2000);
             } else {
               _this2.list = list;
             }

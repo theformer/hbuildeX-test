@@ -26,7 +26,6 @@
 /* 透明度 */
 /* 文章场景相关 */
 .modal-style .modal.data-v-69c2b394 {
-  height: 502rpx;
   width: 464rpx;
 }
 .modal-style .modal .modal-head .modal-png.data-v-69c2b394 {
@@ -49,6 +48,7 @@
   display: -webkit-box;
   display: -webkit-flex;
   display: flex;
+  margin-bottom: 20rpx;
 }
 .modal-style .modal .modal-footer .quitClick.data-v-69c2b394 {
   width: 184rpx;
@@ -126,7 +126,8 @@
 .footer.data-v-69c2b394 {
   height: 98rpx;
   background: white;
-  box-shadow: 0px 1px 3px 1px rgba(0, 0, 0, 0.22);
+  -webkit-box-shadow: 0px 1px 3px 1px rgba(0, 0, 0, 0.22);
+          box-shadow: 0px 1px 3px 1px rgba(0, 0, 0, 0.22);
   display: -webkit-box;
   display: -webkit-flex;
   display: flex;
@@ -240,6 +241,7 @@
   color: #333333;
   line-height: 42rpx;
   display: block;
+  margin-top: 32rpx;
   margin-bottom: 32rpx;
 }
 .margin-top .text-content .answer-explain.data-v-69c2b394 {

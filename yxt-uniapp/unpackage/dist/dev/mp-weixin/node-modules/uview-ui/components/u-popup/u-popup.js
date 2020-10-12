@@ -358,7 +358,7 @@ Object.defineProperty(exports, "__esModule", { value: true });exports.default = 
       } else if (this.mode == 'top' || this.mode == 'bottom') {
         style = {
           width: '100%',
-          height: this.height ? this.getUnitValue(this.width) : '100%',
+          height: this.height ? this.getUnitValue(this.height) : '100%',
           transform: "translate3D(0px,".concat(this.mode == 'top' ? '-100%' : '100%', ",0px)") };
 
       }
@@ -390,7 +390,7 @@ Object.defineProperty(exports, "__esModule", { value: true });exports.default = 
       var style = {};
       style.width = this.width ? this.getUnitValue(this.width) : this.getUnitValue(this.length);
       // 中部弹出的模式，如果没有设置高度，就用auto值，由内容撑开高度
-      style.height = this.height ? this.getUnitValue(this.height) : '100%';
+      style.height = this.height ? this.getUnitValue(this.height) : "auto";
       style.zIndex = this.uZindex;
       style.marginTop = "-".concat(this.$u.addUnit(this.negativeTop));
       if (this.borderRadius) {

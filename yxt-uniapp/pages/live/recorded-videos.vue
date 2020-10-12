@@ -105,7 +105,6 @@
 				watchTime:0,		
 				duration:0,			//总时长
 				pauseTime:0			,//点击切换到别的时间段存储
-				oneId:''			,//当你点击暂停时向里面添加一个此时的id
 				seeTime:[]			,//存储衣蛾当前的播放时间
 				listIndex:[]		,//存储当前时间
 				subCourse:''		//从进度详情页面进入存储的id值
@@ -132,18 +131,15 @@
 			pauseClick:function(e){
 				if(this.watchTime){
 					clearInterval(this.watchTime)
-					this.watchTime = 0
 				}
 				this.saveWatchRecordFun()
 				this.studyTime=0;
-				this.itemId.push(this.oneId)
 			},
 			//结束按钮
 			endedClick:function(e){
 				this.studyTime=0;
 				if(this.watchTime){
 					clearInterval(this.watchTime)
-					this.watchTime = 0
 				}
 			},
 			//视频错误时发生
@@ -153,7 +149,6 @@
 			        showCancel: false
 			    })
 				this.studyTime=0;
-				this.watchTime = 0
 			},
 			//进度条发生变化
 			timeupdateClick:function(e){
@@ -165,32 +160,10 @@
 			saveWatchRecordFun:function(e){
 				let timestamp = new Date().getTime()
 				this.realTimeOfWeb = timestamp - this.startTime
-				console.log(this.itemId,'我是当前项')
-				if(this.itemId.length >1){
-					//根据存储的科目id值进行判断，如果俩个id一样表明同一个视频，不一样存储之前看的那个视频
-					if(this.itemId[this.itemId.length-1]!==this.itemId[this.itemId.length-2]){
-						this.itemIdVal = this.itemId[this.itemId.length-2]
-						this.watchTime = this.studyTime + this.initialTime
-					}else{
-						this.itemIdVal = this.itemId[this.itemId.length-1]
-						for(let i = 0;i<this.listIndex.length;i++){
-							for(let j=0;j<this.listInde[j].length;j++){
-								if(this.itemIdVal = this.listInde[j].id){
-									this.watchTime = this.listInde[j].watchTime +this.studyTime
-								}
-							}
-						}
-					}
-				}else{
-					let stringId =  this.itemId
-					this.itemIdVal = stringId[0]
-					this.watchTime = this.studyTime + this.initialTime
-				}
 				if(this.studyTime>1 && this.duration>1){
 					 if(this.watchTime>this.duration){
 						 this.watchTime =  this.studyTime
 						}
-						
 					uni.request({
 						url:this.baseUrl+'/gxplatform/front/learning/updateVideoLearningProgress',
 						data:{
@@ -200,7 +173,6 @@
 							realTimeOfWeb:this.realTimeOfWeb,	//前端计算的视频播放时长
 							startTime:this.startTime,			//后台记录开始播放时长
 							videoId:this.itemIdVal				,//视频id
-							
 						},
 						method: "POST",
 						header: {
@@ -210,27 +182,12 @@
 						success: (res) => {
 							if(res.code ==1){
 								return
-							}else{
-						
 							}
 						}
 					})
 				 }
-				
 			},
-			//跳转到别的页面向服务器发送数据
-			getAllPlayVideo:function(){
-				if(this.itemId.length >1){
-					//根据存储的科目id值进行判断，如果俩个id一样表明同一个视频，不一样存储之前看的那个视频
-					if(this.itemId[this.itemId.length-1]!==this.itemId[this.itemId.length-2]){
-						this.itemIdVal = this.itemId[this.itemId.length-2]
-					}else{
-						this.itemIdVal = this.itemId[this.itemId.length-1]
-					}
-				}else{
-					let stringId =  this.itemId
-					this.itemIdVal = stringId[0]
-				}
+			saveStartTimeBeforePlay:function(e){
 				uni.request({
 					url:this.baseUrl+'/gxplatform/front/learning/saveStartTimeBeforePlay',
 					data:{
@@ -251,13 +208,18 @@
 					},
 				})
 			},
+			//跳转到别的页面向服务器发送数据
+			getAllPlayVideo:function(videoItem){
+				if(videoItem!=undefined){
+					this.itemIdVal = videoItem.id	
+				}
+				this.saveStartTimeBeforePlay()
+			},
 			//点击切换video的地址
 			changVideosUrl(videoItem,videoIndex){
-				clearInterval(this.watchTime)
-				console.log(videoItem,'我是当前项')
 				this.textClick = videoItem.videoTitle
-				this.oneId = videoItem.id
-				this.itemId.push(videoItem.id)
+				let itemUrl = videoItem.videoUrl
+				// this.initialTime = videoItem.watchTime
 				if(videoItem.duration.length>0){
 					this.duration = videoItem.duration
 						this.duration = this.duration.split(':')
@@ -266,15 +228,19 @@
 						}else if(this.duration.length==2){
 							this.duration =parseInt(this.duration[0]*60)+parseInt(this.duration[1]);
 						}else{
-							this.duration =parseInt(e.duration[0])
+							this.duration =parseInt(this.duration[0])
 						}
 				}
 				let itemName = videoItem.videoTitle
 				//播放视频钱，服务端存储当前时间
 				let timestamp = new Date().getTime()
 				this.realTimeOfWeb = timestamp - this.startTime
-				this.getAllPlayVideo()
-				//更新接口
+				this.getAllPlayVideo(videoItem)
+				this.getChapterVideos(itemName,itemUrl)
+				// this.initialTime  = videoItem.watchTime
+			},
+			//更新接口
+			getChapterVideos:function(itemName,itemUrl){
 				if(this.certificateId!=491){
 					uni.request({
 						url: this.baseUrl + '/gxplatform/front/video/getChapterVideosBySubCourseId',
@@ -288,6 +254,7 @@
 						},
 						success: (res) => {
 							if(res.data.code==1){
+								this.videoSrc =itemUrl
 								let list = res.data.data
 								this.listIndex =  res.data.data
 								list.forEach((ele)=>{
@@ -316,12 +283,14 @@
 						},
 						success: (res) => {
 							if(res.data.code==1){
+								this.videoSrc =videoItem.videoUrl
 								let list = res.data.data.chapterVideosList
 								list.forEach(ele=>{
 									ele.videoList.forEach(e=>{
 										if(itemName ==e.videoTitle){
 											this.initialTime = e.watchTime
-											this.videoContext.seek(this.initialTime)  
+											this.videoContext.seek(this.initialTime) 
+											
 										}
 									})
 								})
@@ -354,11 +323,9 @@
 								})
 							})
 							this.videos = list
-							console.log(this.videos,'好家伙我不会没有任何变动把')
 							this.videoSrc = this.videos[0].videos[0].videoUrl
 							this.videos[0].open = true
 							this.textClick = this.videos[0].videos[0].videoTitle
-							this.itemId.push(this.videos[0].videos[0].id)
 							this.$nextTick(() => {
 							this.$refs.collapse.init()
 							})
@@ -375,11 +342,14 @@
 			},
 			chooseSubject(){
 				this.popupShow = true;
+				if(this.courseIndex==''){
+					this.courseIndex = 0
+				}
 				if(this.stringing ==''){
 					this.stringing = this.listCourse[0].name
 				}else{
-					if(this.listCourse[this.courseIndex].id){
-						this.subCourseId = this.listCourse[this.courseIndex].id
+				if(this.listCourse[this.courseIndex].id !=''){
+					this.subCourseId = this.listCourse[this.courseIndex].id
 					}
 				}
 			},
@@ -511,10 +481,8 @@
 										this.videoSrc = res.data.data.videoUrl
 										this.initialTime  = res.data.data.watchTime
 										this.videoId  = res.data.data.videoId
-										this.oneId = res.data.data.videoId	
+										this.itemIdVal = this.videoId
 										this.subCourseId =  res.data.data.subcourseId
-										this.itemId.push(this.videoId)
-										console.log(this.itemId,'好家伙啊',this.videoId)
 										this.certificateList.forEach(ele=>{
 											ele.extra.forEach(e=>{
 												if(this.subCourseId ==e.id){
@@ -550,7 +518,6 @@
 														if(e.id ==this.videoId){
 															ele.open = true
 															this.textClick = e.videoTitle
-															
 															e.duration = e.duration.split(':')
 															if(e.duration.length==3){
 																e.duration =parseInt(e.duration[0]*3600)+parseInt(e.duration[1]*60)+parseInt(e.duration[2])
@@ -572,25 +539,7 @@
 									}
 								}
 							})
-						}else{				//
-							if(this.videos.length>0){
-								for(let i=0;i<this.videos.length;i++){
-									if(this.videos[i].videos.length>0){
-										for(let j=0;j<this.videos[i].videos.length;j++){
-											if(this.subCourse ==this.videos[i].videos[j].id){
-											this.videoSrc = this.videos[i].videos[j].videoUrl
-											this.videos[i].open = true
-											this.textClick = this.videos[i].videos[j].videoTitle
-											this.itemId.push(this.subCourse)
-											}
-										}
-									}
-									
-								}
-							}
-							
 						}
-						
 					} else {
 						this.videos =[]
 						this.videoSrc=''
@@ -687,11 +636,14 @@
 		}
 		.titleText{
 			margin-left: 30rpx;
-			.titleTextCol{
-				display: block;
-				line-height: 87rpx;
-			}
-			
+				.titleTextCol{
+					display: block;
+					line-height: 87rpx;
+					overflow: hidden;
+					text-overflow:ellipsis;
+					white-space: nowrap;
+					width: 483rpx;
+				}
 		}
 	}
 	.click-finish{

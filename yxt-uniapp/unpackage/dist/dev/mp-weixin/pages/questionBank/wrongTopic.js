@@ -199,6 +199,39 @@ var _default =
                 _this.topiclist.push(e);
               });
             });
+            for (var _i = 0; _i < _this.topiclist.length; _i++) {
+              _this.topiclist[_i].userAnswer = '';
+              if (_this.topiclist[_i].a != '' && _this.topiclist[_i].a != undefined) {
+                _this.topiclist[_i].a = _this.topiclist[_i].a.replace(/<[^>]+>|&[^>]+;/g, '');
+              }
+              if (_this.topiclist[_i].b != '' && _this.topiclist[_i].b != undefined) {
+                _this.topiclist[_i].b = _this.topiclist[_i].b.replace(/<[^>]+>|&[^>]+;/g, '');
+              }
+              if (_this.topiclist[_i].c != '' && _this.topiclist[_i].c != undefined) {
+                _this.topiclist[_i].c = _this.topiclist[_i].c.replace(/<[^>]+>|&[^>]+;/g, '');
+              }
+              if (_this.topiclist[_i].d != '' && _this.topiclist[_i].d != undefined) {
+                _this.topiclist[_i].d = _this.topiclist[_i].d.replace(/<[^>]+>|&[^>]+;/g, '');
+              }
+              if (_this.topiclist[_i].e != '' && _this.topiclist[_i].e != undefined) {
+                _this.topiclist[_i].e = _this.topiclist[_i].e.replace(/<[^>]+>|&[^>]+;/g, '');
+              }
+              if (_this.topiclist[_i].f != '' && _this.topiclist[_i].f != undefined) {
+                _this.topiclist[_i].f = _this.topiclist[_i].f.replace(/<[^>]+>|&[^>]+;/g, '');
+              }
+              if (_this.topiclist[_i].g != '' && _this.topiclist[_i].g != undefined) {
+                _this.topiclist[_i].g = _this.topiclist[_i].g.replace(/<[^>]+>|&[^>]+;/g, '');
+              }
+              if (_this.topiclist[_i].questionTitle != '' && _this.topiclist[_i].questionTitle != undefined) {
+                _this.topiclist[_i].questionTitle = _this.topiclist[_i].questionTitle.replace(/<[^>]+>|&[^>]+;/g, '');
+              }
+              if (_this.topiclist[_i].analyzeWord != '' && _this.topiclist[_i].analyzeWord != undefined) {
+                _this.topiclist[_i].analyzeWord = _this.topiclist[_i].analyzeWord.replace(/<[^>]+>|&[^>]+;/g, '');
+              }
+              if (_this.topiclist[_i].subAnswer != '' && _this.topiclist[_i].subAnswer != undefined) {
+                _this.topiclist[_i].subAnswer = _this.topiclist[_i].subAnswer.replace(/<[^>]+>|&[^>]+;/g, '');
+              }
+            }
             uni.setStorageSync('topiclist', _this.topiclist);
             uni.navigateTo({
               url: 'answer-sheet?type=' + _this.type + '&subCourseId=' + _this.subCourseId + '&isShow=1',

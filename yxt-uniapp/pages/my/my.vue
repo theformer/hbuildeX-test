@@ -5,10 +5,10 @@
 				<view class="portrait-box">
 					<image class="portrait" :src="imgUrl||'/static/my/missing-face.png'"></image>
 				</view>
-				<view class="info-box">
+				<view class="info-box"  @tap="linkToPersonal">
 					<text class="username">{{fullName||'游客'}}</text>
 					<text class="account">{{account||'131*****'}}</text>
-					<image src="/static/my/next.png" class="container__head--image" @tap="linkToPersonal"></image>
+					<image src="/static/my/next.png" class="container__head--image"></image>
 				</view>
 			</view>
 		</view>

@@ -247,7 +247,6 @@ var _default =
       watchTime: 0,
       duration: 0, //总时长
       pauseTime: 0, //点击切换到别的时间段存储
-      oneId: '', //当你点击暂停时向里面添加一个此时的id
       seeTime: [], //存储衣蛾当前的播放时间
       listIndex: [], //存储当前时间
       subCourse: '' //从进度详情页面进入存储的id值
@@ -274,18 +273,15 @@ var _default =
     pauseClick: function pauseClick(e) {
       if (this.watchTime) {
         clearInterval(this.watchTime);
-        this.watchTime = 0;
       }
       this.saveWatchRecordFun();
       this.studyTime = 0;
-      this.itemId.push(this.oneId);
     },
     //结束按钮
     endedClick: function endedClick(e) {
       this.studyTime = 0;
       if (this.watchTime) {
         clearInterval(this.watchTime);
-        this.watchTime = 0;
       }
     },
     //视频错误时发生
@@ -295,7 +291,6 @@ var _default =
         showCancel: false });
 
       this.studyTime = 0;
-      this.watchTime = 0;
     },
     //进度条发生变化
     timeupdateClick: function timeupdateClick(e) {
@@ -307,32 +302,10 @@ var _default =
     saveWatchRecordFun: function saveWatchRecordFun(e) {
       var timestamp = new Date().getTime();
       this.realTimeOfWeb = timestamp - this.startTime;
-      console.log(this.itemId, '我是当前项');
-      if (this.itemId.length > 1) {
-        //根据存储的科目id值进行判断，如果俩个id一样表明同一个视频，不一样存储之前看的那个视频
-        if (this.itemId[this.itemId.length - 1] !== this.itemId[this.itemId.length - 2]) {
-          this.itemIdVal = this.itemId[this.itemId.length - 2];
-          this.watchTime = this.studyTime + this.initialTime;
-        } else {
-          this.itemIdVal = this.itemId[this.itemId.length - 1];
-          for (var i = 0; i < this.listIndex.length; i++) {
-            for (var j = 0; j < this.listInde[j].length; j++) {
-              if (this.itemIdVal = this.listInde[j].id) {
-                this.watchTime = this.listInde[j].watchTime + this.studyTime;
-              }
-            }
-          }
-        }
-      } else {
-        var stringId = this.itemId;
-        this.itemIdVal = stringId[0];
-        this.watchTime = this.studyTime + this.initialTime;
-      }
       if (this.studyTime > 1 && this.duration > 1) {
         if (this.watchTime > this.duration) {
           this.watchTime = this.studyTime;
         }
-
         uni.request({
           url: this.baseUrl + '/gxplatform/front/learning/updateVideoLearningProgress',
           data: {
@@ -343,7 +316,6 @@ var _default =
             startTime: this.startTime, //后台记录开始播放时长
             videoId: this.itemIdVal //视频id
           },
-
           method: "POST",
           header: {
             'content-type': 'application/x-www-form-urlencoded',
@@ -352,27 +324,12 @@ var _default =
           success: function success(res) {
             if (res.code == 1) {
               return;
-            } else {
-
             }
           } });
 
       }
-
     },
-    //跳转到别的页面向服务器发送数据
-    getAllPlayVideo: function getAllPlayVideo() {var _this2 = this;
-      if (this.itemId.length > 1) {
-        //根据存储的科目id值进行判断，如果俩个id一样表明同一个视频，不一样存储之前看的那个视频
-        if (this.itemId[this.itemId.length - 1] !== this.itemId[this.itemId.length - 2]) {
-          this.itemIdVal = this.itemId[this.itemId.length - 2];
-        } else {
-          this.itemIdVal = this.itemId[this.itemId.length - 1];
-        }
-      } else {
-        var stringId = this.itemId;
-        this.itemIdVal = stringId[0];
-      }
+    saveStartTimeBeforePlay: function saveStartTimeBeforePlay(e) {var _this2 = this;
       uni.request({
         url: this.baseUrl + '/gxplatform/front/learning/saveStartTimeBeforePlay',
         data: {
@@ -393,13 +350,18 @@ var _default =
         } });
 
     },
+    //跳转到别的页面向服务器发送数据
+    getAllPlayVideo: function getAllPlayVideo(videoItem) {
+      if (videoItem != undefined) {
+        this.itemIdVal = videoItem.id;
+      }
+      this.saveStartTimeBeforePlay();
+    },
     //点击切换video的地址
-    changVideosUrl: function changVideosUrl(videoItem, videoIndex) {var _this3 = this;
-      clearInterval(this.watchTime);
-      console.log(videoItem, '我是当前项');
+    changVideosUrl: function changVideosUrl(videoItem, videoIndex) {
       this.textClick = videoItem.videoTitle;
-      this.oneId = videoItem.id;
-      this.itemId.push(videoItem.id);
+      var itemUrl = videoItem.videoUrl;
+      // this.initialTime = videoItem.watchTime
       if (videoItem.duration.length > 0) {
         this.duration = videoItem.duration;
         this.duration = this.duration.split(':');
@@ -408,15 +370,19 @@ var _default =
         } else if (this.duration.length == 2) {
           this.duration = parseInt(this.duration[0] * 60) + parseInt(this.duration[1]);
         } else {
-          this.duration = parseInt(e.duration[0]);
+          this.duration = parseInt(this.duration[0]);
         }
       }
       var itemName = videoItem.videoTitle;
       //播放视频钱，服务端存储当前时间
       var timestamp = new Date().getTime();
       this.realTimeOfWeb = timestamp - this.startTime;
-      this.getAllPlayVideo();
-      //更新接口
+      this.getAllPlayVideo(videoItem);
+      this.getChapterVideos(itemName, itemUrl);
+      // this.initialTime  = videoItem.watchTime
+    },
+    //更新接口
+    getChapterVideos: function getChapterVideos(itemName, itemUrl) {var _this3 = this;
       if (this.certificateId != 491) {
         uni.request({
           url: this.baseUrl + '/gxplatform/front/video/getChapterVideosBySubCourseId',
@@ -430,6 +396,7 @@ var _default =
 
           success: function success(res) {
             if (res.data.code == 1) {
+              _this3.videoSrc = itemUrl;
               var list = res.data.data;
               _this3.listIndex = res.data.data;
               list.forEach(function (ele) {
@@ -458,12 +425,14 @@ var _default =
 
           success: function success(res) {
             if (res.data.code == 1) {
+              _this3.videoSrc = videoItem.videoUrl;
               var list = res.data.data.chapterVideosList;
               list.forEach(function (ele) {
                 ele.videoList.forEach(function (e) {
                   if (itemName == e.videoTitle) {
                     _this3.initialTime = e.watchTime;
                     _this3.videoContext.seek(_this3.initialTime);
+
                   }
                 });
               });
@@ -496,11 +465,9 @@ var _default =
               });
             });
             _this4.videos = list;
-            console.log(_this4.videos, '好家伙我不会没有任何变动把');
             _this4.videoSrc = _this4.videos[0].videos[0].videoUrl;
             _this4.videos[0].open = true;
             _this4.textClick = _this4.videos[0].videos[0].videoTitle;
-            _this4.itemId.push(_this4.videos[0].videos[0].id);
             _this4.$nextTick(function () {
               _this4.$refs.collapse.init();
             });
@@ -517,10 +484,13 @@ var _default =
     },
     chooseSubject: function chooseSubject() {
       this.popupShow = true;
+      if (this.courseIndex == '') {
+        this.courseIndex = 0;
+      }
       if (this.stringing == '') {
         this.stringing = this.listCourse[0].name;
       } else {
-        if (this.listCourse[this.courseIndex].id) {
+        if (this.listCourse[this.courseIndex].id != '') {
           this.subCourseId = this.listCourse[this.courseIndex].id;
         }
       }
@@ -653,10 +623,8 @@ var _default =
                   _this5.videoSrc = res.data.data.videoUrl;
                   _this5.initialTime = res.data.data.watchTime;
                   _this5.videoId = res.data.data.videoId;
-                  _this5.oneId = res.data.data.videoId;
+                  _this5.itemIdVal = _this5.videoId;
                   _this5.subCourseId = res.data.data.subcourseId;
-                  _this5.itemId.push(_this5.videoId);
-                  console.log(_this5.itemId, '好家伙啊', _this5.videoId);
                   _this5.certificateList.forEach(function (ele) {
                     ele.extra.forEach(function (e) {
                       if (_this5.subCourseId == e.id) {
@@ -692,7 +660,6 @@ var _default =
                             if (e.id == _this5.videoId) {
                               ele.open = true;
                               _this5.textClick = e.videoTitle;
-
                               e.duration = e.duration.split(':');
                               if (e.duration.length == 3) {
                                 e.duration = parseInt(e.duration[0] * 3600) + parseInt(e.duration[1] * 60) + parseInt(e.duration[2]);
@@ -714,25 +681,7 @@ var _default =
                 }
               } });
 
-          } else {//
-            if (_this5.videos.length > 0) {
-              for (var _i2 = 0; _i2 < _this5.videos.length; _i2++) {
-                if (_this5.videos[_i2].videos.length > 0) {
-                  for (var _j = 0; _j < _this5.videos[_i2].videos.length; _j++) {
-                    if (_this5.subCourse == _this5.videos[_i2].videos[_j].id) {
-                      _this5.videoSrc = _this5.videos[_i2].videos[_j].videoUrl;
-                      _this5.videos[_i2].open = true;
-                      _this5.textClick = _this5.videos[_i2].videos[_j].videoTitle;
-                      _this5.itemId.push(_this5.subCourse);
-                    }
-                  }
-                }
-
-              }
-            }
-
           }
-
         } else {
           _this5.videos = [];
           _this5.videoSrc = '';

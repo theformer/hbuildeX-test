@@ -90,7 +90,7 @@
 								} else {
 									uni.setStorageSync('topiclist', list.questionList);
 									uni.navigateTo({
-										url: 'answer-sheet?paperId='+this.paperId,
+										url: 'answer-sheet?paperId='+this.paperId+'&subCourseId='+this.subCourseId,
 										animationType: 'pop-in',
 										animationDuration: 300
 									})
@@ -105,7 +105,6 @@
 			this.tkMsg = this.$store.state.userInfo.tkMsg
 			if(this.subCourseId&&this.courseId){
 				if(this.courseId!=491){
-					console.log(this.courseId!=491,'成立吗')
 					uni.request({
 						url: this.baseUrl + '/gxplatform/front/tk/getPaperListBySubCourseId',
 						data: {
@@ -125,7 +124,11 @@
 									title: res.data.message
 								});
 								this.list = []
-								return
+								setTimeout(function(){
+									uni.navigateBack({delta:1,
+									animationType: 'pop-out',
+									animationDuration: 200
+								})},2000)
 							} else {
 								this.list = list	
 							}
@@ -150,7 +153,11 @@
 									title: res.data.message
 								});
 								this.list = []
-								return
+								setTimeout(function(){
+									uni.navigateBack({delta:1,
+									animationType: 'pop-out',
+									animationDuration: 200
+								})},2000)
 							} else {
 								this.list = list	
 							}
